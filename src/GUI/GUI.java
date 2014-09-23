@@ -1,4 +1,4 @@
-package GUI;
+﻿package GUI;
 
 
 import File.MusicNameSort;
@@ -13,8 +13,8 @@ import java.io.File;
 public class GUI extends JFrame{
 
     private JButton button = new JButton("Start");
-    private JTextField inputWay1 = new JTextField("C:\\Users\\Вова\\Desktop\\2");
-    private JTextField inputWay2 = new JTextField("C:\\Users\\Вова\\Desktop\\1");
+    private JTextField inputWay1 = new JTextField("C:\\2");
+    private JTextField inputWay2 = new JTextField("C:\\1");
     private JLabel labelSyn = new JLabel(" Synchronize");
     private JLabel labelWith = new JLabel(" with");
     private JLabel labelOut = new JLabel("");
