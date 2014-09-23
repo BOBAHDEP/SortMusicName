@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Name {
 
@@ -145,8 +148,8 @@ public class Name {
         }
     }
 
-    public void copyFile(String fileNameWay, String newFolderWay){
-        String newNewFolderName = newFolderWay + getLastPartOfName(fileNameWay, '/');
+    public static void copyFile(String fileNameWay, String newFolderWay){
+        String newNewFolderName = newFolderWay;// + getLastPartOfName(fileNameWay, '/');
         try{
             FileInputStream fis = new FileInputStream(fileNameWay);
             FileOutputStream fos = new FileOutputStream(newNewFolderName);
@@ -167,7 +170,17 @@ public class Name {
     }
 
     public static void copyFolder(String nameFrom, String nameTo){
-        FileUtil.copyDir(nameFrom, nameTo);
+        System.out.println(nameFrom + " " + nameTo);
+        if (new File(nameFrom).isDirectory()){
+            FileUtil.copyDir(nameFrom, nameTo);
+        }else {
+            try {
+                Files.copy(Paths.get(nameFrom), Paths.get(nameTo + "/" + new File(nameFrom).getName()));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public static void deleteFoldersInside(String folder) throws MyException{

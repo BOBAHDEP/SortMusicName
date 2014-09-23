@@ -25,11 +25,9 @@ public class MusicNameSort {
 
 
         for (File f : files){   // name sort
-            GUI.log(f.getName());
-            GUI.guiUpdate();
             Path source = Paths.get(f.getAbsolutePath());
             try {
-                //Name.sortID3Tags(f);       //works wrong
+                //Name.sortID3Tags(f);       //todo
                 Files.move(source,source.resolveSibling(Name.changeName4(f.getName(),f.getParentFile().getName())));
                 if (f.exists()){
                     Files.move(source, source.resolveSibling(Name.changeName(f.getName())));
@@ -45,39 +43,11 @@ public class MusicNameSort {
         if (files == null){throw new MyException("Files is null");}
         for (File f : files){
             if(!f.getName().equals(Name.changeName(f.getName())) || !f.getName().equals(Name.changeName4(f.getName(),f.getParentFile().getName()))){ // to delete repeated files
-                GUI.log(f.getName());
-                GUI.guiUpdate();
                 if (f.delete()){
-                    GUI.log(" : File deleted");
-                    GUI.guiUpdate();
+//                    GUI.log(" : File deleted");
+//                    GUI.guiUpdate();
                 }
             }
         }
-    }
-
-    public static void mainSort(String musicFolder, String playerFolder) {
-
-        //String musicFolder = "C:\\Users\\Вова\\Desktop\\MusicFolder";
-        //String playerFolder = "E:\\Music";
-
-//        GUI.log("Started changing file names:");
-//        try{
-//            MusicNameSort.sort(musicFolder);
-//            GUI.log("sorting OK");
-//
-//            GUI.log("Started deleting files");
-//            Name.deleteFoldersInside(playerFolder);
-//            GUI.log("deleting OK");
-//
-//            GUI.log("Started coping files..");
-//            File file = new File(musicFolder);
-//            File[] files = file.listFiles();
-//            if (files == null){throw new MyException("Files is null");}
-//            for (File f : files){
-//                Name.copyFolder(f.getAbsolutePath(),playerFolder);
-//            }
-//            GUI.log("coping OK");
-//        } catch (MyException e){
-//            GUI.log("error " + e.toString());}
     }
 }

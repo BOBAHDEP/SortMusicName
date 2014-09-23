@@ -8,22 +8,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.ImageObserver;
 import java.io.File;
-import java.text.AttributedCharacterIterator;
 
 public class GUI extends JFrame{
 
     private JButton button = new JButton("Start");
-    private JTextField inputWay1 = new JTextField("C:\\Users\\Вова\\Desktop\\MusicFolder");
-    private JTextField inputWay2 = new JTextField("E:\\Music");
+    private JTextField inputWay1 = new JTextField("C:\\Users\\Вова\\Desktop\\2");
+    private JTextField inputWay2 = new JTextField("C:\\Users\\Вова\\Desktop\\1");
     private JLabel labelSyn = new JLabel(" Synchronize");
     private JLabel labelWith = new JLabel(" with");
-    private static JLabel labelOut = new JLabel("");
+    private JLabel labelOut = new JLabel("");
     private JPanel jPanel = new JPanel();
+    private static String information = "";
+    private Timer timer;
 
     public GUI() {
-        super("Music synchronizer");
+        super("Music synchronize");
+        timer = new Timer(10, taskPerformer);
         this.setBounds(350,250,300,230);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container container = this.getContentPane();
@@ -39,47 +40,75 @@ public class GUI extends JFrame{
         button.addActionListener(new ButtonEventListener());
     }
 
+    public void start() {
+        timer.start();
+    }
+
+    ActionListener taskPerformer = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            labelOut.setText(information);
+            repaint();
+        }
+    };
+
+    class MyThread implements Runnable{
+        @Override
+        public void run() {
+            copy();
+        }
+    }
+
     class ButtonEventListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //MusicNameSort.mainSort(inputWay1.getText(), inputWay2.getText());
-
+            start();
+            labelOut.setText("!!!");
+            Thread myThread = new Thread(new MyThread());
+            myThread.start();
             log("Started changing file names:");
             guiUpdate();
-            try{
-                MusicNameSort.sort(inputWay1.getText());
-                log("sorting OK");
-                guiUpdate();
-
-                log("Started deleting files");
-                guiUpdate();
-                Name.deleteFoldersInside(inputWay2.getText());
-                log("deleting OK");
-                guiUpdate();
-
-                log("Started coping files..");
-                guiUpdate();
-
-                File file = new File(inputWay1.getText());
-                File[] files = file.listFiles();
-                if (files == null){throw new MyException("Files is null");}
-                for (File f : files){
-                    Name.copyFolder(f.getAbsolutePath(),inputWay2.getText());
-                }
-                log("coping OK");
-                guiUpdate();
-            } catch (MyException e1){
-                log("error " + e1.toString());}
-
+            repaint();
 
         }
     }
 
-    public static void log(String name){
-        labelOut.setText(name);
+    private void copy(){
+        try{
+            MusicNameSort.sort(inputWay1.getText());
+            log("sorting OK");
+            guiUpdate();
+
+            log("Started deleting files");
+            guiUpdate();
+            Name.deleteFoldersInside(inputWay2.getText());
+            log("deleting OK");
+            guiUpdate();
+
+            log("Started coping files..");
+            guiUpdate();
+
+            File file = new File(inputWay1.getText());
+            File[] files = file.listFiles();
+            if (files == null){throw new MyException("Files is null");}
+            for (File f : files){
+                System.out.println(f.getName()+ " " + f.isDirectory());
+                Name.copyFolder(f.getAbsolutePath(),inputWay2.getText());
+                log("Coping " + f.getName());
+                guiUpdate();
+            }
+            log("coping OK");
+            guiUpdate();
+
+        } catch (MyException e1){
+            log("error " + e1.toString());}
     }
 
-    public static void guiUpdate(){
-        labelOut.updateUI();
+    public  static void log(String name){
+        information = name;
+    }
+
+    public  void guiUpdate(){
+        repaint();
     }
 
     public static void main(String[] args) {
